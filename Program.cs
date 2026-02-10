@@ -24,6 +24,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<EmployeeService>();
 
 
 // Register services with different lifetimes

@@ -1,12 +1,28 @@
+using DemoApi.Data.Config;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoApi.Data
 {
     public class CompanyDBContext : DbContext
     {
-        public CompanyDBContext(){
-            
+
+        // Allows EF Core to connect to DB
+        public CompanyDBContext(DbContextOptions<CompanyDBContext> options):base(options)
+        {
+
         }
-       DbSet<Employee> Employees {get; set;}
+
+        // Represents a database table
+        public DbSet<Employee> Employees {get; set;}
+
+
+        //EF Core builds a model of your database at runtime
+        // This method lets you customize that model
+        // Customize DB structure
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.ApplyConfiguration(new EmployeeConfig());
+        }
     }
 }
