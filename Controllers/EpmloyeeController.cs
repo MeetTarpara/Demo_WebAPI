@@ -16,11 +16,14 @@ namespace DemoApi.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        //async Method
+        [HttpGet("with_department")]
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_service.GetAll());
+            var employees = await _service.GetAll();
+            return Ok(employees);
         }
+
 
 
         [HttpGet("{id}")]

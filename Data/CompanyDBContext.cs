@@ -14,6 +14,8 @@ namespace DemoApi.Data
 
         // Represents a database table
         public DbSet<Employee> Employees {get; set;}
+        public DbSet<Department> Departments {get; set;}
+        public DbSet<Project> Projects {get; set;}
 
 
         //EF Core builds a model of your database at runtime
@@ -23,6 +25,8 @@ namespace DemoApi.Data
         {
 
             modelBuilder.ApplyConfiguration(new EmployeeConfig());
+            modelBuilder.ApplyConfiguration(new DepartmentConfig());
+            modelBuilder.ApplyConfiguration(new ProjectConfig());
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using DemoApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DemoApi.Migrations
 {
     [DbContext(typeof(CompanyDBContext))]
-    partial class CompanyDBContextModelSnapshot : ModelSnapshot
+    [Migration("20260211061737_FK_Employee_Department")]
+    partial class FK_Employee_Department
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,51 +95,6 @@ namespace DemoApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DemoApi.Data.Project", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ProjectName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Projects", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProjectName = "Project A"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProjectName = "Project B"
-                        });
-                });
-
-            modelBuilder.Entity("EmployeeProject", b =>
-                {
-                    b.Property<int>("EmployeesId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("EmployeesId", "ProjectsId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("EmployeeProjects", (string)null);
-                });
-
             modelBuilder.Entity("DemoApi.Data.Employee", b =>
                 {
                     b.HasOne("DemoApi.Data.Department", "Department")
@@ -145,21 +103,6 @@ namespace DemoApi.Migrations
                         .HasConstraintName("FK_Employee_Department");
 
                     b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("EmployeeProject", b =>
-                {
-                    b.HasOne("DemoApi.Data.Employee", null)
-                        .WithMany()
-                        .HasForeignKey("EmployeesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DemoApi.Data.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("DemoApi.Data.Department", b =>

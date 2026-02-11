@@ -1,4 +1,3 @@
-using DemoApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -23,7 +22,7 @@ namespace DemoApi.Data.Config
                     Name="Name1",
                     Age=18
                 },
-                  new Employee
+                new Employee
                 {
                     Id=2,
                     Name="Name2",
@@ -31,6 +30,11 @@ namespace DemoApi.Data.Config
 
                 }
             });
+
+            builder.HasOne(n => n.Department)
+                    .WithMany(n => n.Employees)
+                    .HasForeignKey(n => n.DepartmentId)
+                    .HasConstraintName("FK_Employee_Department");
         }
     }
     

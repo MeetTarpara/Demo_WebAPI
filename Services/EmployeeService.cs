@@ -1,4 +1,5 @@
 using DemoApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoApi.Services
 {
@@ -9,14 +10,43 @@ namespace DemoApi.Services
         {
             _dbContext=dBContext;
         }
-        public List<Employee> GetAll()
+
+        // public async Task<List<Employee>> GetAll()
+        // {
+        //     return await _dbContext.Employees
+        //                             .Include(e => e.Department)
+        //                             .Include(e => e.Projects)
+        //                             .ToListAsync();
+        // }
+
+        public async Task<List<EmployeeResponse>> GetAll()
         {
-            return _dbContext.Employees.ToList();
+            var employees = await _dbContext.Employees
+                .AsNoTracking()
+                .Select(s => new EmployeeResponse
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Age = s.Age,
+                    DepartmentId = s.DepartmentId,
+                    Department = s.Department != null ? s.Department.DepartmentName : null,
+                    Projects = s.Projects
+                        .Select(p => new ProjectResponse
+                        {
+                            Id = p.Id,
+                            ProjectName = p.ProjectName
+                        })
+                        .ToList()
+                })
+                .ToListAsync();
+
+            return employees;
         }
+
 
         public Employee? GetById(int id)
         {
-            return _dbContext.Employees.FirstOrDefault(e => e.Id == id);
+            return _dbContext.Employees.AsNoTracking().FirstOrDefault(e => e.Id == id);
         }
 
         public Employee Create(Employee employee)
@@ -27,6 +57,7 @@ namespace DemoApi.Services
                 Age = employee.Age
             };
 
+           
             _dbContext.Employees.Add(newEmployee);
             _dbContext.SaveChanges();
             return newEmployee;
@@ -37,8 +68,17 @@ namespace DemoApi.Services
             var existing = GetById(id);
             if (existing == null) return false;
 
-            existing.Name = employee.Name;
-            existing.Age = employee.Age;
+              var newRecord= new Employee(){
+                Id=existing.Id,
+                Name = employee.Name,
+                Age = employee.Age
+
+            };
+            _dbContext.Employees.Update(newRecord);
+
+            //alternate way 
+            // existing.Name = employee.Name;
+            // existing.Age = employee.Age;
             _dbContext.SaveChanges();
             return true;
         }
