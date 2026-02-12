@@ -13,7 +13,7 @@ namespace DemoApi.Data.Config
             builder.Property(p => p.Id).UseIdentityColumn();
             builder.Property(p => p.ProjectName).IsRequired().HasMaxLength(250);
 
-            // Optional: Seed Data
+     
             builder.HasData(new List<Project>
             {
                 new Project { Id = 1, ProjectName = "Project A" },
@@ -23,7 +23,7 @@ namespace DemoApi.Data.Config
             // Configure Many-to-Many with Employee
             builder
                 .HasMany(p => p.Employees)
-                .WithMany(e => e.Projects)  // Make sure Employee has ICollection<Project> Projects
+                .WithMany(e => e.Projects) 
                 .UsingEntity(j => j.ToTable("EmployeeProjects")); // Join table
         }
     }
