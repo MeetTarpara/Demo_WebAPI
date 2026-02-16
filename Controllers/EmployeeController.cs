@@ -18,7 +18,6 @@ namespace DemoApi.Controllers
         }
 
         //async Method
-        // [Authorize]
         [HttpGet("with_department")]
         public async Task<IActionResult> GetAll()
         {

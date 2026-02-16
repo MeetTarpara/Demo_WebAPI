@@ -78,8 +78,8 @@ public class AuthController : ControllerBase
         var creds = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: "MyWebApi",          // ✅ use issuer:
-            audience: "MyAngularApp",    // ✅ use audience:
+            issuer: "MyWebApi",          
+            audience: "MyAngularApp",    
             claims: claims,
             expires: DateTime.Now.AddHours(1),
             signingCredentials: creds

@@ -6,7 +6,7 @@ namespace DemoApi.Services
     public class EmployeeService
     {
         private readonly CompanyDBContext _dbContext;
-          public EmployeeService(CompanyDBContext dBContext)
+        public EmployeeService(CompanyDBContext dBContext)
         {
             _dbContext=dBContext;
         }

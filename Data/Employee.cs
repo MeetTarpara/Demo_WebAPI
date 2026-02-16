@@ -15,7 +15,7 @@ namespace DemoApi.Data
         public ICollection<Project> Projects { get; set; } = new List<Project>();
     }
 
-//Like DTO response model
+//Like DTO response model to avoid recursion
     public class EmployeeResponse
     {
         public int Id { get; set; }
