@@ -1,5 +1,6 @@
 using DemoApi.Data;
 using DemoApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace DemoApi.Controllers
         }
 
         //async Method
+        // [Authorize]
         [HttpGet("with_department")]
         public async Task<IActionResult> GetAll()
         {

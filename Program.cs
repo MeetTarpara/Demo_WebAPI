@@ -6,11 +6,21 @@ using DemoApi.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
+//JWT Token
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 //swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+
 
 //Fluent Validation
 builder.Services.AddControllers()
@@ -54,6 +64,30 @@ builder.Services.AddDbContext<CompanyDBContext>(options =>
     ));
 
 
+//Jwt Token
+var key = builder.Configuration["Jwt:Key"]
+          ?? throw new Exception("JWT Key not found in appsettings.json");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "MyWebApi",
+        ValidAudience = "MyAngularApp",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+    };
+});
+
+
 
 var app = builder.Build();
 app.UseCors("AllowAngular");
@@ -69,8 +103,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 //Middleware
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+// app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
+
+//JWT - Authentication and authorization 
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 
