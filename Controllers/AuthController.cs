@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
 
         var token = GenerateToken(user);
 
-        return Ok(new { token,user.Name });
+        return Ok(new { token,user.Email });
     }
 
 
@@ -64,8 +64,6 @@ public class AuthController : ControllerBase
         // secret key
         var key = _config["Jwt:Key"];
 
-        if (string.IsNullOrEmpty(key))
-            throw new Exception("JWT Key is missing in appsettings.json");
 
         var claims = new[]
         {
@@ -89,8 +87,6 @@ public class AuthController : ControllerBase
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-
-    //for testing purpose
 
     [Authorize]
     [HttpGet("persons")]
