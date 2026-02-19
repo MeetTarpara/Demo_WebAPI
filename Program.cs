@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -61,6 +62,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddSingleton<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<EmployeeService>();
 
 
@@ -114,6 +116,17 @@ builder.Services.AddAuthentication(options =>
     };
     
 });
+
+
+//for custome authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("EmailExists", policy =>
+        policy.Requirements.Add(new EmailExistsRequirement()));
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, EmailExistsHandler>();
+
 
 
 
